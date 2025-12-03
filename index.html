@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panday – 10-Minute Pitch Carousels</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0c1020;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.1);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-soft: #1f2933;
+      --radius-xl: 1.5rem;
+      --shadow-soft: 0 18px 35px rgba(15, 23, 42, 0.8);
+      --transition-fast: 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1rem 3rem;
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .header h1 {
+      font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .header p {
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.75);
+    }
+
+    .carousel-shell {
+      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+      border-radius: var(--radius-xl);
+      padding: 1rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .carousel-shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Left: Carousel viewport */
+    .carousel-frame {
+      background: radial-gradient(circle, #111827, #020617);
+      border-radius: calc(var(--radius-xl) - 0.5rem);
+      padding: 0.9rem;
+      border: 1px solid rgba(30, 64, 175, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5; /* IG post style */
+      border-radius: calc(var(--radius-xl) - 1rem);
+      overflow: hidden;
+      background: #020617;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 1.6rem 1.7rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.2rem;
+      opacity: 0;
+      transform: translateX(12%);
+      pointer-events: none;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.2rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.8),
+        rgba(30, 64, 175, 0.35)
+      );
+      color: #e5e7eb;
+    }
+
+    .slide-tag span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .slide-title {
+      font-size: 1.35rem;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .slide-body {
+      font-size: 0.98rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 28rem;
+    }
+
+    .slide-body strong {
+      color: #e5e7eb;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .slide-footer span {
+      opacity: 0.85;
+    }
+
+    .slide-footer .brand {
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    /* Controls */
+    .carousel-controls {
+      margin-top: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 0.4rem 0.9rem;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        transform 120ms ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      border-color: rgba(251, 146, 60, 0.9);
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: #e5e7eb;
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #fb923c, #f97316);
+      border-color: #fed7aa;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(55, 65, 81, 0.8);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast), width var(--transition-fast);
+    }
+
+    .dot.active {
+      width: 18px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.9);
+    }
+
+    .slide-counter {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Right: Outline / script */
+    .outline-panel {
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+      border-radius: calc(var(--radius-xl) - 0.5rem);
+      padding: 1.1rem 1.25rem;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .outline-title {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+    }
+
+    .outline-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.55rem 0.6rem;
+      border-radius: 0.9rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      transition: border-color var(--transition-fast), background var(--transition-fast),
+        transform 120ms ease;
+    }
+
+    .outline-row.active {
+      border-color: rgba(249, 115, 22, 0.75);
+      background: radial-gradient(circle at left, var(--accent-soft), #020617);
+      transform: translateY(-1px);
+    }
+
+    .outline-step {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .outline-main {
+      font-size: 0.83rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .outline-main strong {
+      color: #e5e7eb;
+    }
+
+    .outline-main span {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .outline-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .outline-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      line-height: 1.5;
+    }
+
+    .outline-note strong {
+      color: #e5e7eb;
+    }
+
+    .outline-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15, 23, 42, 0.8);
+      font-size: 0.72rem;
+    }
+
+    .pill span {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .demo-block {
+      margin-top: 0.35rem;
+      padding-top: 0.4rem;
+      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .demo-block strong {
+      color: #e5e7eb;
+    }
+
+    .demo-block ul {
+      margin: 0.25rem 0 0.25rem 1rem;
+      padding-left: 0.75rem;
+    }
+
+    .demo-block li {
+      margin-bottom: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="header">
+      <div class="badge">
+        <div class="badge-dot"></div>
+        Panday – 10-Minute Pitch • Script + Carousels
+      </div>
+      <h1>Panday Presentation – Alex&apos;s Journey</h1>
+      <p>
+        Total: <strong>10 minutes</strong> • Ad: 2 minutes • Slides (this carousel): 2 minutes •
+        Live Demo (app): 4 minutes • Closing: 1 minute.
+      </p>
+    </header>
+
+    <main class="carousel-shell">
+      <!-- LEFT: Carousel -->
+      <section class="carousel-frame" aria-label="Panday carousel slides">
+        <div class="carousel-viewport" id="carouselViewport">
+          <!-- Slide 1 -->
+          <article class="slide active" data-slide="0">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 1 • Intro &amp; Alex
+              </div>
+              <h2 class="slide-title">
+                Meet Alex: the aspiring electrician who feels stuck.
+              </h2>
+              <p class="slide-body">
+                Josh: &quot;Meet Alex. He wants to become an electrician but he&apos;s paralyzed.
+                Google gives him 200 results. Indeed shows jobs he doesn&apos;t qualify for.
+                He doesn&apos;t know what &apos;apprenticeship&apos; really means. So he does nothing.
+                This is why BC has an 85,000 worker shortage.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Hook + human story to open the problem.</span>
+              <span class="brand">Josh • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 2 -->
+          <article class="slide" data-slide="1">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 2 • Research Maze
+              </div>
+              <h2 class="slide-title">
+                What Alex actually sees when he tries to start.
+              </h2>
+              <p class="slide-body">
+                Speaker: &quot;This is what Alex sees when he researches &apos;how to become an
+                electrician in BC.&apos; A maze of conflicting information, bureaucratic processes,
+                and no clear starting point. Is it any wonder people give up before they start?&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Visualize the confusion and friction in the current system.</span>
+              <span class="brand">Team • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 3 -->
+          <article class="slide" data-slide="2">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 3 • Crisis
+              </div>
+              <h2 class="slide-title">
+                The crisis is real – and it&apos;s systemic.
+              </h2>
+              <p class="slide-body">
+                Speaker: &quot;The crisis is real. 72% of BC construction companies can&apos;t find workers.
+                Over half of apprentices drop out before completion. And those who try face waitlists
+                hundreds deep. The system is broken at every level.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Ground the story in real, urgent numbers.</span>
+              <span class="brand">Team • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 4 -->
+          <article class="slide" data-slide="3">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 4 • The Gauntlet
+              </div>
+              <h2 class="slide-title">
+                Becoming an electrician is a 4-year gauntlet.
+              </h2>
+              <p class="slide-body">
+                Speaker: &quot;Becoming an electrician means navigating this 4-year gauntlet:
+                6,000 work hours, 1,200 classroom hours, finding a sponsor (which requires experience),
+                passing multiple exams... all while trying to earn a living. No wonder people choose
+                easier paths.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Make the path feel long, demanding, and risky without support.</span>
+              <span class="brand">Team • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 5 -->
+          <article class="slide" data-slide="4">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 5 • Information Overload
+              </div>
+              <h2 class="slide-title">
+                One dream, ten different &quot;truths&quot;.
+              </h2>
+              <p class="slide-body">
+                Speaker: &quot;Alex faces information overload. BCIT says one thing. SkilledTradesBC
+                says another. Reddit users give conflicting advice. Job postings list prerequisites
+                he doesn&apos;t understand. There&apos;s no single source of truth.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Highlight the lack of a clear, trusted roadmap.</span>
+              <span class="brand">Team • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 6 -->
+          <article class="slide" data-slide="5">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 6 • Panday Solution
+              </div>
+              <h2 class="slide-title">
+                Panday turns confusion into a clear, guided path.
+              </h2>
+              <p class="slide-body">
+                Manny: &quot;Panday transforms confusion into clarity. We give every user three things:
+                a personalized roadmap from day one to Red Seal certification, an AI guide that answers
+                their questions 24/7, and a checkpoint system that turns an overwhelming journey into
+                achievable steps.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Introduce the product and its three core pillars.</span>
+              <span class="brand">Manny • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 7 -->
+          <article class="slide" data-slide="6">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 7 • Who Wins
+              </div>
+              <h2 class="slide-title">
+                This isn&apos;t just an app – it&apos;s a win for everyone.
+              </h2>
+              <p class="slide-body">
+                Nikita: &quot;This isn&apos;t just an app. Workers get clear paths to high-paying careers.
+                Employers get access to motivated, qualified candidates. And BC gets closer to filling
+                that 85,000-worker gap. Everyone wins.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Connect Panday to workers, employers, and BC&apos;s labour gap.</span>
+              <span class="brand">Nikita • Panday</span>
+            </div>
+          </article>
+
+          <!-- Slide 8 -->
+          <article class="slide" data-slide="7">
+            <div>
+              <div class="slide-tag">
+                <span></span>
+                Slide 8 • Bridge to Demo
+              </div>
+              <h2 class="slide-title">
+                From confused to employed – now, watch it happen.
+              </h2>
+              <p class="slide-body">
+                Ozem: &quot;Let me show you how Alex goes from confused to employed. This is Panday.&quot;
+              </p>
+            </div>
+            <div class="slide-footer">
+              <span>Clean hand-off into the live demo section.</span>
+              <span class="brand">Ozem • Panday</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="carousel-controls">
+          <div class="control-buttons">
+            <button class="btn" id="prevBtn" type="button">
+              <!-- left arrow -->
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M11.8 4.3a1 1 0 0 1 0 1.4L8.42 9.08a1 1 0 0 0 0 1.41L11.8 14.3a1 1 0 0 1-1.42 1.4l-3.38-3.38a3 3 0 0 1 0-4.24l3.38-3.38a1 1 0 0 1 1.42 0Z"
+                  fill="currentColor"
+                />
+              </svg>
+              Prev
+            </button>
+            <button class="btn btn-primary" id="nextBtn" type="button">
+              Next
+              <!-- right arrow -->
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M8.2 4.3a1 1 0 0 0 0 1.4l3.38 3.38a1 1 0 0 1 0 1.41L8.2 14.3a1 1 0 1 0 1.42 1.4l3.38-3.38a3 3 0 0 0 0-4.24L9.62 4.3A1 1 0 0 0 8.2 4.3Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="dots" id="dots"></div>
+
+          <div class="slide-counter" id="slideCounter">
+            Slide 1 of 8
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Outline panel for timing + live demo script -->
+      <aside class="outline-panel">
+        <div>
+          <div class="outline-title">Slide Outline &amp; Timing</div>
+        </div>
+
+        <div class="outline-row active" data-outline="0">
+          <div class="outline-step">1</div>
+          <div class="outline-main">
+            <strong>Intro – Alex &amp; the shortage</strong>
+            <span>Josh introduces Alex and links his paralysis to BC&apos;s 85,000 worker gap.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="1">
+          <div class="outline-step">2</div>
+          <div class="outline-main">
+            <strong>The research maze</strong>
+            <span>Speaker shows the confusing online journey: conflicting info and no clear start.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="2">
+          <div class="outline-step">3</div>
+          <div class="outline-main">
+            <strong>The crisis in numbers</strong>
+            <span>72% can&apos;t find workers, 50%+ drop out, waitlists are long – system failure.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="3">
+          <div class="outline-step">4</div>
+          <div class="outline-main">
+            <strong>The 4-year gauntlet</strong>
+            <span>6,000 work hours, 1,200 class hours, sponsor, exams – all while paying bills.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="4">
+          <div class="outline-step">5</div>
+          <div class="outline-main">
+            <strong>Information overload</strong>
+            <span>BCIT, SkilledTradesBC, Reddit, job posts – no single source of truth.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="5">
+          <div class="outline-step">6</div>
+          <div class="outline-main">
+            <strong>Panday&apos;s three promises</strong>
+            <span>Personal roadmap, 24/7 AI guide, checkpoint system turning chaos into steps.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="6">
+          <div class="outline-step">7</div>
+          <div class="outline-main">
+            <strong>Who benefits</strong>
+            <span>Workers, employers, and BC all win as the labour gap closes.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <div class="outline-row" data-outline="7">
+          <div class="outline-step">8</div>
+          <div class="outline-main">
+            <strong>Bridge to live demo</strong>
+            <span>Ozem moves from narrative into &quot;Let me show you&quot; and opens the app.</span>
+          </div>
+          <div class="outline-time">~15s</div>
+        </div>
+
+        <p class="outline-note">
+          <strong>High-level timing:</strong> Slides ~2 minutes total • Live demo 4 minutes • Closing 1 minute
+          (plus 2-minute ad segment elsewhere for a total of 10 minutes).
+        </p>
+
+        <div class="demo-block">
+          <strong>Live Demo – Alex inside Panday (4 minutes)</strong>
+          <ul>
+            <li>
+              Alex wants to learn more about direct entry, so he clicks on one of the Resource nodes.
+            </li>
+            <li>
+              These nodes give him reliable, verified information — official guidelines plus practical advice.
+            </li>
+            <li>
+              As Alex opens a node, he moves through step-by-step instructions, reviews documents,
+              and follows external links — all directly from the roadmap.
+            </li>
+            <li>
+              He skips unnecessary government sites, trade associations, and scattered resources:
+              everything is gathered into one place.
+            </li>
+          </ul>
+          At any time, Alex can also ask for key tips or short explanations so he feels informed, confident,
+          and supported all the way through.
+
+          <br /><br />
+          <strong>Checkpoints &amp; Progress – how it&apos;s implemented and why it matters</strong>
+          <ul>
+            <li>
+              As Alex moves through the roadmap, he sees his progress visually.
+            </li>
+            <li>
+              When he completes a checkpoint, the node gently fills with color — turning from a neutral outline
+              into a fully marked, completed step.
+            </li>
+            <li>
+              A progress bar at the top advances, showing how far along he is in the overall journey.
+            </li>
+          </ul>
+          These small visual cues help Alex stay oriented, motivated, and aware of what he has already done
+          and what still lies ahead. Instead of feeling lost or overwhelmed, he feels a sense of accomplishment
+          with each completed step.
+        </div>
+
+        <div class="outline-footer">
+          <div class="pill">
+            Total: <span>10-minute presentation</span>
+          </div>
+          <div class="pill">
+            Flow: <span>Ad → Slides → Demo → Closing</span>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const dotsContainer = document.getElementById("dots");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const counter = document.getElementById("slideCounter");
+      const outlineRows = Array.from(document.querySelectorAll(".outline-row"));
+
+      let current = 0;
+      const total = slides.length;
+
+      // Build dots
+      slides.forEach((_, index) => {
+        const dot = document.createElement("button");
+        dot.className = "dot" + (index === 0 ? " active" : "");
+        dot.type = "button";
+        dot.dataset.index = index;
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = Array.from(document.querySelectorAll(".dot"));
+
+      function updateSlides(index) {
+        current = (index + total) % total;
+
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === current);
+        });
+
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === current);
+        });
+
+        outlineRows.forEach((row, i) => {
+          row.classList.toggle("active", i === current);
+        });
+
+        counter.textContent = `Slide ${current + 1} of ${total}`;
+      }
+
+      prevBtn.addEventListener("click", () => updateSlides(current - 1));
+      nextBtn.addEventListener("click", () => updateSlides(current + 1));
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const idx = Number(dot.dataset.index);
+          updateSlides(idx);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+
