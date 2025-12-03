@@ -1007,6 +1007,43 @@
 
       viewport.addEventListener("pointerup", endPointerSwipe);
       viewport.addEventListener("pointercancel", endPointerSwipe);
+
+      // --- Trackpad horizontal swipe via wheel events ---
+      let wheelDeltaX = 0;
+      let wheelReset;
+      let wheelLocked = false;
+      let wheelUnlockTimer;
+      const WHEEL_THRESHOLD = 60;
+      const WHEEL_RESET_DELAY = 180;
+      const WHEEL_UNLOCK_DELAY = 520;
+      viewport.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // ignore vertical scrolls
+          if (wheelLocked) {
+            e.preventDefault();
+            return;
+          }
+          wheelDeltaX += e.deltaX;
+          if (Math.abs(wheelDeltaX) > WHEEL_THRESHOLD) {
+            updateSlides(wheelDeltaX > 0 ? current + 1 : current - 1);
+            wheelDeltaX = 0;
+            wheelLocked = true;
+            clearTimeout(wheelUnlockTimer);
+            wheelUnlockTimer = setTimeout(() => {
+              wheelLocked = false;
+            }, WHEEL_UNLOCK_DELAY);
+            e.preventDefault();
+            return;
+          }
+          clearTimeout(wheelReset);
+          wheelReset = setTimeout(() => {
+            wheelDeltaX = 0;
+          }, WHEEL_RESET_DELAY);
+          e.preventDefault();
+        },
+        { passive: false }
+      );
     })();
   </script>
 </body>
