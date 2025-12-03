@@ -373,6 +373,7 @@
       border: 1px solid rgba(31, 41, 55, 0.95);
       transition: border-color var(--transition-fast), background var(--transition-fast),
         transform 120ms ease;
+      cursor: pointer;
     }
 
     .outline-row.active {
@@ -875,13 +876,13 @@
           slide.classList.toggle("active", i === current);
         });
 
-        dots.forEach((dot, i) => {
-          dot.classList.toggle("active", i === current);
-        });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === current);
+      });
 
-        outlineRows.forEach((row, i) => {
-          row.classList.toggle("active", i === current);
-        });
+      outlineRows.forEach((row, i) => {
+        row.classList.toggle("active", i === current);
+      });
 
         counter.textContent = `Slide ${current + 1} of ${total}`;
       }
@@ -893,6 +894,17 @@
         dot.addEventListener("click", () => {
           const idx = Number(dot.dataset.index);
           updateSlides(idx);
+        });
+      });
+
+      outlineRows.forEach((row, idx) => {
+        row.setAttribute("tabindex", "0");
+        row.addEventListener("click", () => updateSlides(idx));
+        row.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            updateSlides(idx);
+          }
         });
       });
 
