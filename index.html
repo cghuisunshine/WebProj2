@@ -191,6 +191,16 @@
       max-width: 28rem;
     }
 
+    .role-name {
+      color: #e5e7eb;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .roles-hidden .role-name {
+      display: none;
+    }
+
     @media (max-width: 600px) {
       .slide-body {
         font-size: 0.86rem;
@@ -235,6 +245,21 @@
     @media (max-width: 600px) {
       .carousel-controls {
         gap: 0.5rem;
+      }
+    }
+
+    .side-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 600px) {
+      .side-controls {
+        width: 100%;
+        justify-content: space-between;
       }
     }
 
@@ -478,7 +503,7 @@
                 Meet Alex: the aspiring electrician who feels stuck.
               </h2>
               <p class="slide-body">
-                Josh: &quot;Meet Alex. He wants to become an electrician but he&apos;s paralyzed.
+                <span class="role-name">Josh: </span>&quot;Meet Alex. He wants to become an electrician but he&apos;s paralyzed.
                 Google gives him 200 results. Indeed shows jobs he doesn&apos;t qualify for.
                 He doesn&apos;t know what &apos;apprenticeship&apos; really means. So he does nothing.
                 This is why BC has an 85,000 worker shortage.&quot;
@@ -501,7 +526,7 @@
                 What Alex actually sees when he tries to start.
               </h2>
               <p class="slide-body">
-                Speaker: &quot;This is what Alex sees when he researches &apos;how to become an
+                <span class="role-name">Speaker: </span>&quot;This is what Alex sees when he researches &apos;how to become an
                 electrician in BC.&apos; A maze of conflicting information, bureaucratic processes,
                 and no clear starting point. Is it any wonder people give up before they start?&quot;
               </p>
@@ -523,7 +548,7 @@
                 The crisis is real – and it&apos;s systemic.
               </h2>
               <p class="slide-body">
-                Speaker: &quot;The crisis is real. 72% of BC construction companies can&apos;t find workers.
+                <span class="role-name">Speaker: </span>&quot;The crisis is real. 72% of BC construction companies can&apos;t find workers.
                 Over half of apprentices drop out before completion. And those who try face waitlists
                 hundreds deep. The system is broken at every level.&quot;
               </p>
@@ -545,7 +570,7 @@
                 Becoming an electrician is a 4-year gauntlet.
               </h2>
               <p class="slide-body">
-                Speaker: &quot;Becoming an electrician means navigating this 4-year gauntlet:
+                <span class="role-name">Speaker: </span>&quot;Becoming an electrician means navigating this 4-year gauntlet:
                 6,000 work hours, 1,200 classroom hours, finding a sponsor (which requires experience),
                 passing multiple exams... all while trying to earn a living. No wonder people choose
                 easier paths.&quot;
@@ -568,7 +593,7 @@
                 One dream, ten different &quot;truths&quot;.
               </h2>
               <p class="slide-body">
-                Speaker: &quot;Alex faces information overload. BCIT says one thing. SkilledTradesBC
+                <span class="role-name">Speaker: </span>&quot;Alex faces information overload. BCIT says one thing. SkilledTradesBC
                 says another. Reddit users give conflicting advice. Job postings list prerequisites
                 he doesn&apos;t understand. There&apos;s no single source of truth.&quot;
               </p>
@@ -590,7 +615,7 @@
                 Panday turns confusion into a clear, guided path.
               </h2>
               <p class="slide-body">
-                Manny: &quot;Panday transforms confusion into clarity. We give every user three things:
+                <span class="role-name">Manny: </span>&quot;Panday transforms confusion into clarity. We give every user three things:
                 a personalized roadmap from day one to Red Seal certification, an AI guide that answers
                 their questions 24/7, and a checkpoint system that turns an overwhelming journey into
                 achievable steps.&quot;
@@ -613,7 +638,7 @@
                 This isn&apos;t just an app – it&apos;s a win for everyone.
               </h2>
               <p class="slide-body">
-                Nikita: &quot;This isn&apos;t just an app. Workers get clear paths to high-paying careers.
+                <span class="role-name">Nikita: </span>&quot;This isn&apos;t just an app. Workers get clear paths to high-paying careers.
                 Employers get access to motivated, qualified candidates. And BC gets closer to filling
                 that 85,000-worker gap. Everyone wins.&quot;
               </p>
@@ -635,7 +660,7 @@
                 From confused to employed – now, watch it happen.
               </h2>
               <p class="slide-body">
-                Ozem: &quot;Let me show you how Alex goes from confused to employed. This is Panday.&quot;
+                <span class="role-name">Ozem: </span>&quot;Let me show you how Alex goes from confused to employed. This is Panday.&quot;
               </p>
             </div>
             <div class="slide-footer">
@@ -671,8 +696,13 @@
 
           <div class="dots" id="dots"></div>
 
-          <div class="slide-counter" id="slideCounter">
-            Slide 1 of 8
+          <div class="side-controls">
+            <button class="btn" id="toggleRolesBtn" type="button" aria-pressed="false">
+              Hide role names
+            </button>
+            <div class="slide-counter" id="slideCounter">
+              Slide 1 of 8
+            </div>
           </div>
         </div>
       </section>
@@ -821,9 +851,11 @@
       const counter = document.getElementById("slideCounter");
       const outlineRows = Array.from(document.querySelectorAll(".outline-row"));
       const viewport = document.getElementById("carouselViewport");
+      const toggleRolesBtn = document.getElementById("toggleRolesBtn");
 
       let current = 0;
       const total = slides.length;
+      let rolesHidden = false;
 
       // Build dots
       slides.forEach((_, index) => {
@@ -863,6 +895,19 @@
           updateSlides(idx);
         });
       });
+
+      function syncRoleToggle() {
+        toggleRolesBtn.textContent = rolesHidden ? "Show role names" : "Hide role names";
+        toggleRolesBtn.setAttribute("aria-pressed", String(rolesHidden));
+      }
+
+      toggleRolesBtn.addEventListener("click", () => {
+        rolesHidden = !rolesHidden;
+        document.body.classList.toggle("roles-hidden", rolesHidden);
+        syncRoleToggle();
+      });
+
+      syncRoleToggle();
 
       // --- Mobile swipe support ---
       let touchStartX = 0;
@@ -912,4 +957,3 @@
   </script>
 </body>
 </html>
-
