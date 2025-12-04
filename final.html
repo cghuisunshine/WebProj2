@@ -138,15 +138,14 @@
       transform: translateX(12%);
       pointer-events: none;
       transition: opacity var(--transition-fast), transform var(--transition-fast);
-      overflow-y: auto;                 /* allow vertical scrolling inside each slide */
-      -webkit-overflow-scrolling: touch;/* smooth scrolling on iOS */
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     @media (max-width: 600px) {
       .slide {
         padding: 1.1rem 1rem;
         gap: 0.8rem;
-        overflow-y: auto;               /* ensure still scrollable on mobile */
       }
     }
 
@@ -192,16 +191,28 @@
       line-height: 1.5;
       color: var(--text-muted);
       max-width: 28rem;
+      white-space: pre-line;
     }
 
     .role-name {
       color: #e5e7eb;
       font-weight: 600;
       letter-spacing: 0.01em;
+      cursor: pointer;
+      text-decoration: underline dotted transparent;
+      text-underline-offset: 3px;
+    }
+
+    .role-name:hover {
+      text-decoration-color: rgba(249, 115, 22, 0.8);
     }
 
     .roles-hidden .role-name {
       display: none;
+    }
+
+    .role-section-text {
+      /* just to help spacing; keep neutral styling */
     }
 
     @media (max-width: 600px) {
@@ -505,8 +516,8 @@
               </div>
               <h2 class="slide-title">Slide 1</h2>
               <p class="slide-body">
-                <span class="role-name">JOSH: </span>
-                -By 2030, BC will need over 85,000 new skilled trades workers. 50% of apprentices never finish their red seal certification  — not because their not capable, but because the The journey is confusing, scattered, and overwhelming.(remove this completely? Were still talking about the problem) Panday makes it clear, supported, and achievable."
+                <span class="role-name">JOSH:</span>
+                By 2030, BC will need over 85,000 new skilled trades workers. 50% of apprentices never finish their red seal certification — not because they’re not capable, but because the journey is confusing, scattered, and overwhelming. Panday makes it clear, supported, and achievable.
               </p>
             </div>
             <div class="slide-footer">
@@ -524,8 +535,8 @@
               </div>
               <h2 class="slide-title">Slide 2</h2>
               <p class="slide-body">
-                <span class="role-name">JOSH: </span><br />
-                Meet Alex. Fresh out of high school. He's highly motivated but completely lost. He wants to become an electrician — but the moment he searches online, he gets hit with scattered PDFs, outdated websites, and no clear starting point. 
+                <span class="role-name">JOSH:</span>
+                Meet Alex. Fresh out of high school. He's highly motivated but completely lost. He wants to become an electrician — but the moment he searches online, he gets hit with scattered PDFs, outdated websites, and no clear starting point.
               </p>
             </div>
             <div class="slide-footer">
@@ -543,11 +554,14 @@
               </div>
               <h2 class="slide-title">Slide 3</h2>
               <p class="slide-body">
-                <span class="role-name">REAGAN: </span> <br /><br />
-                - And Alex isn’t alone on this, over 72% of construction firms report severe labour shortages.<br /><br />
-                - over half of apprentices never finish their program. <br /><br />
-                And there are hundreds of people stuck on waitlists for union positions. <br /><br />
-                - The path is not hard because of the work — it’s hard because the information is broken.
+                <span class="role-name">REAGAN:</span>
+                And Alex isn’t alone in this. Over 72% of construction firms report severe labour shortages.
+
+                Over half of apprentices never finish their program.
+
+                And there are hundreds of people stuck on waitlists for union positions.
+
+                The path is not hard because of the work — it’s hard because the information is broken.
               </p>
             </div>
             <div class="slide-footer">
@@ -565,10 +579,12 @@
               </div>
               <h2 class="slide-title">Slide 4</h2>
               <p class="slide-body">
-                <span class="role-name">Bruno: </span><br />
-                Alex isn’t struggling because he lacks motivation or skill — the real problem is the system. He’s drowning in information, but none of it is organized in a way he can actually use. <br /><br />
-                “And even when he finds guidance, it’s usually generic. It doesn’t fit his situation or where he is in the process.”<br /><br />
-                “So naturally, he gets stuck. With all that noise and no personalized direction, he never knows what the actual next step is.”
+                <span class="role-name">Bruno:</span>
+                Alex isn’t struggling because he lacks motivation or skill — the real problem is the system. He’s drowning in information, but none of it is organized in a way he can actually use.
+
+                And even when he finds guidance, it’s usually generic. It doesn’t fit his situation or where he is in the process.
+
+                So naturally, he gets stuck. With all that noise and no personalized direction, he never knows what the actual next step is.
               </p>
             </div>
             <div class="slide-footer">
@@ -586,7 +602,7 @@
               </div>
               <h2 class="slide-title">Slide 5</h2>
               <p class="slide-body">
-                <span class="role-name">NIKITA: </span>
+                <span class="role-name">NIKITA:</span>
                 Instead of telling you how we fix this, let us show you.
               </p>
             </div>
@@ -605,16 +621,23 @@
               </div>
               <h2 class="slide-title">Demo-part1</h2>
               <p class="slide-body">
-                <span class="role-name">NIKITA: </span> When you first open Panday, you're greeted with a quick 60-second tutorial…<br /><br />
-                <span class="role-name">NIKITA: </span> These yellow nodes represent your main career milestones - Level 1, Level 2, all the way to Red Seal. Unlike a generic checklist, this is a visual map of your entire journey.<br /><br />
-                <span class="role-name">NIKITA: </span>  Each milestone has three types of support:<br />
-                - Blue (Resources) - learning materials, study guides<br />
-                - Green (Actions) - tasks you need to complete<br />
-                - Orange (Roadblocks) - common challenges and how to overcome them<br /><br />
-                <span class="role-name">NIKITA: </span>  click on Level 1... and now the Actions connector…<br /><br />
-                <span class="role-name">NIKITA: </span> Here's where Panday solves the 'unclear next steps' problem. Every milestone breaks down into specific, trackable tasks.<br /><br />
-                <span class="role-name">NIKITA: </span> As you complete items, the progress fills in visually on the map.<br /><br />
-                <span class="role-name">NIKITA: </span> And if anything is unclear, we have an AI assistant
+                <span class="role-name">NIKITA:</span>
+                When you first open Panday, you're greeted with a quick 60-second tutorial…
+
+                These yellow nodes represent your main career milestones – Level 1, Level 2, all the way to Red Seal. Unlike a generic checklist, this is a visual map of your entire journey.
+
+                Each milestone has three types of support:
+                - Blue (Resources) – learning materials, study guides
+                - Green (Actions) – tasks you need to complete
+                - Orange (Roadblocks) – common challenges and how to overcome them
+
+                Click on Level 1... and now the Actions connector…
+
+                Here's where Panday solves the “unclear next steps” problem. Every milestone breaks down into specific, trackable tasks.
+
+                As you complete items, the progress fills in visually on the map.
+
+                And if anything is unclear, we have an AI assistant.
               </p>
             </div>
             <div class="slide-footer">
@@ -632,7 +655,8 @@
               </div>
               <h2 class="slide-title">Demo-part2</h2>
               <p class="slide-body">
-                <span class="role-name">DARREL: </span> Okay, this says I need 1,500 hours of work experience before Level 2... but I'm doing a mix of residential and commercial work. Does all of that count? How does this apply to my specific situation?
+                <span class="role-name">DARREL:</span>
+                Okay, this says I need 1,500 hours of work experience before Level 2... but I'm doing a mix of residential and commercial work. Does all of that count? How does this apply to my specific situation?
               </p>
             </div>
             <div class="slide-footer">
@@ -650,11 +674,18 @@
               </div>
               <h2 class="slide-title">Demo-part3</h2>
               <p class="slide-body">
-                <span class="role-name">Bruno: </span> Let us ask Panday, our AI Companion, in the chatbox…<br /><br />
-                *  “Do residential hours count toward my apprenticeship?"<br /><br />
-                Notice how it cites exactly where this information comes from - you can hover to preview the exact section from the source.<br /><br />
-                <span class="role-name">DARREL: </span>  "I'm a Level 1 apprentice working for a small contractor. I do about 60% residential, 30% commercial, and some light industrial. My employer isn't sure what to log for my hours. Can you break down exactly what counts and what documentation I need to track?"<br /><br />
-                <span class="role-name">Bruno: </span> As you can see our AI knows Alex is at Level 1, knows he's a BC resident, and pulls from the official program documentation to give a personalized answer - not generic advice you'd find on a random forum.
+                <span class="role-name">Bruno:</span>
+                Let us ask Panday, our AI Companion, in the chatbox…
+
+                “Do residential hours count toward my apprenticeship?”
+
+                Notice how it cites exactly where this information comes from – you can hover to preview the exact section from the source.
+
+                <span class="role-name">DARREL:</span>
+                I'm a Level 1 apprentice working for a small contractor. I do about 60% residential, 30% commercial, and some light industrial. My employer isn't sure what to log for my hours. Can you break down exactly what counts and what documentation I need to track?
+
+                <span class="role-name">Bruno:</span>
+                As you can see, our AI knows Alex is at Level 1, knows he's a BC resident, and pulls from the official program documentation to give a personalized answer – not generic advice you'd find on a random forum.
               </p>
             </div>
             <div class="slide-footer">
@@ -672,14 +703,19 @@
               </div>
               <h2 class="slide-title">Demo-part4</h2>
               <p class="slide-body">
-                <span class="role-name">Ozem: </span> Now here's something unique. Alex just learned he needs to track his hours carefully. Let's have the AI help him stay organized.<br /><br />
-                <span class="role-name">Ozem: </span> Create a reminder for me to log my hours every Friday and review them with my employer monthly <br /><br />
-                <span class="role-name">Ozem: </span> AI proposes a custom node with:<br />
-                Title: "Track Work Hours"<br />
-                Checklist: "Log hours every Friday", "Monthly review with employer"<br />
-                Attached to: Level 1<br /><br />
-                <span class="role-name">Ozem: </span> Alex can accept this, and now it's part of HIS roadmap - not a generic template, but a personalized task that fits his situation.<br /><br />
-                <span class="role-name">Ozem: </span> So to recap - instead of information overload, you get a visual map. Instead of a generic path, you get one personalized to your level and situation. And instead of unclear next steps, you get specific, trackable tasks with AI support when you need clarification.
+                <span class="role-name">Ozem:</span>
+                Now here's something unique. Alex just learned he needs to track his hours carefully. Let's have the AI help him stay organized.
+
+                Create a reminder for me to log my hours every Friday and review them with my employer monthly.
+
+                AI proposes a custom node with:
+                Title: “Track Work Hours”
+                Checklist: “Log hours every Friday”, “Monthly review with employer”
+                Attached to: Level 1
+
+                Alex can accept this, and now it's part of HIS roadmap – not a generic template, but a personalized task that fits his situation.
+
+                So to recap – instead of information overload, you get a visual map. Instead of a generic path, you get one personalized to your level and situation. And instead of unclear next steps, you get specific, trackable tasks with AI support when you need clarification.
               </p>
             </div>
             <div class="slide-footer">
@@ -697,7 +733,7 @@
               </div>
               <h2 class="slide-title">Slide 6</h2>
               <p class="slide-body">
-                <span class="role-name">PETER: </span>
+                <span class="role-name">PETER:</span>
                 After using Panday, Alex goes from confusion to clarity. From a messy path to real structure. From feeling alone to feeling supported.
               </p>
             </div>
@@ -716,8 +752,8 @@
               </div>
               <h2 class="slide-title">Slide 7</h2>
               <p class="slide-body">
-                <span class="role-name">Manny: </span>
-                This isn't just an app. Workers get clear paths to high-paying careers with their red seal. Employers get access to motivated, qualified candidates. And BC gets closer to filling that 85,000-worker gap. Everyone wins.
+                <span class="role-name">Manny:</span>
+                This isn't just an app. Workers get clear paths to high-paying careers with their Red Seal. Employers get access to motivated, qualified candidates. And BC gets closer to filling that 85,000-worker gap. Everyone wins.
               </p>
             </div>
             <div class="slide-footer">
@@ -735,9 +771,10 @@
               </div>
               <h2 class="slide-title">Slide 8</h2>
               <p class="slide-body">
-                <span class="role-name">NIKITA: </span>
-                And we’re only just getting started. starting with electricians. Next we aim to add roadmaps for plumbers, welders, HVAC, carpenters. The goal is a full ecosystem — from training to job placement to career advancement<br /><br />
-                And this is just the beginning. We’re starting with electricians — but soon, we’re expanding to plumbers, welders, HVAC technicians, and carpenters. Our vision is bigger than a single trade. We’re building a full ecosystem that carries people from training, to job placement, to real career advancement.”
+                <span class="role-name">NIKITA:</span>
+                And we’re only just getting started, starting with electricians. Next, we aim to add roadmaps for plumbers, welders, HVAC, carpenters. The goal is a full ecosystem — from training to job placement to career advancement.
+
+                And this is just the beginning. We’re starting with electricians — but soon, we’re expanding to plumbers, welders, HVAC technicians, and carpenters. Our vision is bigger than a single trade. We’re building a full ecosystem that carries people from training, to job placement, to real career advancement.
               </p>
             </div>
             <div class="slide-footer">
@@ -755,8 +792,8 @@
               </div>
               <h2 class="slide-title">Slide 9</h2>
               <p class="slide-body">
-                <span class="role-name">Everyone: </span>
-                Here’s our team, Nikita, Ozem, Josh, Peter, Manraj, Reagan, Bruno, and Darrel
+                <span class="role-name">Everyone:</span>
+                Here’s our team: Nikita, Ozem, Josh, Peter, Manraj, Reagan, Bruno, and Darrel.
               </p>
             </div>
             <div class="slide-footer">
@@ -977,6 +1014,8 @@
 
   <script>
     (function () {
+      const STORAGE_PREFIX = "panday_role_section_";
+
       const slides = Array.from(document.querySelectorAll(".slide"));
       const dotsContainer = document.getElementById("dots");
       const prevBtn = document.getElementById("prevBtn");
@@ -989,6 +1028,101 @@
       let current = 0;
       const total = slides.length;
       let rolesHidden = false;
+
+      // Turn each role-name + following content into: <span.role-name>...</span><span.role-section-text>...</span>
+      function wrapRoleSections() {
+        document.querySelectorAll(".slide-body").forEach((body) => {
+          const roleNames = Array.from(body.querySelectorAll(".role-name"));
+          roleNames.forEach((roleEl) => {
+            // If already wrapped (next sibling is role-section-text), skip
+            if (
+              roleEl.nextElementSibling &&
+              roleEl.nextElementSibling.classList.contains("role-section-text")
+            ) {
+              return;
+            }
+
+            const textWrapper = document.createElement("span");
+            textWrapper.className = "role-section-text";
+
+            let sibling = roleEl.nextSibling;
+            while (
+              sibling &&
+              !(
+                sibling.nodeType === 1 &&
+                sibling.classList &&
+                sibling.classList.contains("role-name")
+              )
+            ) {
+              const next = sibling.nextSibling;
+              textWrapper.appendChild(sibling);
+              sibling = next;
+            }
+
+            body.insertBefore(textWrapper, sibling);
+          });
+        });
+      }
+
+      function loadSavedRoleSections() {
+        if (!("localStorage" in window)) return;
+        slides.forEach((slide, slideIndex) => {
+          const body = slide.querySelector(".slide-body");
+          if (!body) return;
+          const roleNames = Array.from(body.querySelectorAll(".role-name"));
+          roleNames.forEach((roleEl, roleIndex) => {
+            const textSpan = roleEl.nextElementSibling;
+            if (!textSpan || !textSpan.classList.contains("role-section-text")) return;
+            const key = STORAGE_PREFIX + slideIndex + "_" + roleIndex;
+            const saved = localStorage.getItem(key);
+            if (saved !== null) {
+              textSpan.textContent = " " + saved;
+            }
+          });
+        });
+      }
+
+      function attachRoleEditors() {
+        const hasStorage = "localStorage" in window;
+        slides.forEach((slide, slideIndex) => {
+          const body = slide.querySelector(".slide-body");
+          if (!body) return;
+          const roleNames = Array.from(body.querySelectorAll(".role-name"));
+          roleNames.forEach((roleEl, roleIndex) => {
+            roleEl.title = "Double-click to edit this speaker's lines";
+            roleEl.addEventListener("dblclick", () => {
+              const textSpan = roleEl.nextElementSibling;
+              if (!textSpan || !textSpan.classList.contains("role-section-text")) return;
+
+              const currentText = textSpan.textContent.trimStart();
+              const label = roleEl.textContent.trim();
+
+              const newText = prompt(
+                `Edit the text for ${label}.\n(Use Enter for new lines):`,
+                currentText
+              );
+              if (newText === null) return;
+
+              textSpan.textContent = " " + newText;
+
+              if (hasStorage) {
+                try {
+                  const key = STORAGE_PREFIX + slideIndex + "_" + roleIndex;
+                  localStorage.setItem(key, newText);
+                } catch (err) {
+                  console.error("Failed to save role section", err);
+                  alert("Could not save this section to localStorage.");
+                }
+              }
+            });
+          });
+        });
+      }
+
+      // Prepare DOM: wrap role sections, then load saved text, then attach editors
+      wrapRoleSections();
+      loadSavedRoleSections();
+      attachRoleEditors();
 
       // Build dots
       slides.forEach((_, index) => {
@@ -1067,18 +1201,20 @@
         isSwiping = false;
       });
 
-      viewport.addEventListener("touchmove", (e) => {
-        const touch = e.changedTouches[0];
-        const dx = touch.clientX - touchStartX;
-        const dy = touch.clientY - touchStartY;
+      viewport.addEventListener(
+        "touchmove",
+        (e) => {
+          const touch = e.changedTouches[0];
+          const dx = touch.clientX - touchStartX;
+          const dy = touch.clientY - touchStartY;
 
-        // start treating as swipe if horizontal movement dominates
-        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
-          isSwiping = true;
-          // prevent horizontal scroll from dragging the page
-          e.preventDefault();
-        }
-      }, { passive: false });
+          if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+            isSwiping = true;
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
 
       viewport.addEventListener("touchend", (e) => {
         if (!isSwiping) return;
@@ -1089,10 +1225,8 @@
 
         if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
           if (deltaX < 0) {
-            // swipe left -> next slide
             updateSlides(current + 1);
           } else {
-            // swipe right -> previous slide
             updateSlides(current - 1);
           }
         }
@@ -1105,7 +1239,7 @@
       let pointerSwiping = false;
 
       viewport.addEventListener("pointerdown", (e) => {
-        if (e.pointerType === "touch") return; // handled by touch listeners
+        if (e.pointerType === "touch") return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
         pointerActive = true;
         pointerSwiping = false;
@@ -1151,7 +1285,7 @@
       viewport.addEventListener(
         "wheel",
         (e) => {
-          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // ignore vertical scrolls
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
           if (wheelLocked) {
             e.preventDefault();
             return;
