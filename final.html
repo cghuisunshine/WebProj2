@@ -138,12 +138,15 @@
       transform: translateX(12%);
       pointer-events: none;
       transition: opacity var(--transition-fast), transform var(--transition-fast);
+      overflow-y: auto;                 /* allow vertical scrolling inside each slide */
+      -webkit-overflow-scrolling: touch;/* smooth scrolling on iOS */
     }
 
     @media (max-width: 600px) {
       .slide {
         padding: 1.1rem 1rem;
         gap: 0.8rem;
+        overflow-y: auto;               /* ensure still scrollable on mobile */
       }
     }
 
@@ -818,7 +821,7 @@
         </div>
       </section>
 
-      <!-- RIGHT: Outline panel for timing + live demo script -->
+      <!-- RIGHT: Outline panel -->
       <aside class="outline-panel">
         <div>
           <div class="outline-title">Slide Outline &amp; Timing</div>
