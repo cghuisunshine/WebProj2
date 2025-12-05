@@ -724,7 +724,7 @@
             </div>
           </article>
 
-          <!-- Slide 10 (was 6) -->
+          <!-- Slide 10 -->
           <article class="slide" data-slide="9">
             <div>
               <div class="slide-tag">
@@ -743,7 +743,7 @@
             </div>
           </article>
 
-          <!-- Slide 11 (was 7) -->
+          <!-- Slide 11 -->
           <article class="slide" data-slide="10">
             <div>
               <div class="slide-tag">
@@ -762,7 +762,7 @@
             </div>
           </article>
 
-          <!-- Slide 12 (was 8) -->
+          <!-- Slide 12 -->
           <article class="slide" data-slide="11">
             <div>
               <div class="slide-tag">
@@ -783,7 +783,7 @@
             </div>
           </article>
 
-          <!-- Slide 13 (was 9) -->
+          <!-- Slide 13 -->
           <article class="slide" data-slide="12">
             <div>
               <div class="slide-tag">
@@ -802,7 +802,7 @@
             </div>
           </article>
 
-          <!-- Slide 14 (was 10) -->
+          <!-- Slide 14 -->
           <article class="slide" data-slide="13">
             <div>
               <div class="slide-tag">
@@ -1015,6 +1015,8 @@
   <script>
     (function () {
       const STORAGE_PREFIX = "panday_role_section_";
+      const DEFAULT_PREFIX = "panday_role_default_";
+      const hasStorage = "localStorage" in window;
 
       const slides = Array.from(document.querySelectorAll(".slide"));
       const dotsContainer = document.getElementById("dots");
@@ -1063,8 +1065,33 @@
         });
       }
 
+      // Capture defaults once, from original HTML, before overrides are applied
+      function captureDefaultRoleSections() {
+        slides.forEach((slide, slideIndex) => {
+          const body = slide.querySelector(".slide-body");
+          if (!body) return;
+          const roleNames = Array.from(body.querySelectorAll(".role-name"));
+          roleNames.forEach((roleEl, roleIndex) => {
+            const textSpan = roleEl.nextElementSibling;
+            if (!textSpan || !textSpan.classList.contains("role-section-text")) return;
+
+            const defKey = DEFAULT_PREFIX + slideIndex + "_" + roleIndex;
+            const defaultText = textSpan.textContent.trimStart();
+            textSpan.dataset.defaultText = defaultText;
+
+            if (hasStorage && localStorage.getItem(defKey) === null) {
+              try {
+                localStorage.setItem(defKey, defaultText);
+              } catch (err) {
+                console.error("Failed to store default role text", err);
+              }
+            }
+          });
+        });
+      }
+
       function loadSavedRoleSections() {
-        if (!("localStorage" in window)) return;
+        if (!hasStorage) return;
         slides.forEach((slide, slideIndex) => {
           const body = slide.querySelector(".slide-body");
           if (!body) return;
@@ -1082,8 +1109,6 @@
       }
 
       function attachRoleEditors() {
-        const hasStorage = "localStorage" in window;
-
         slides.forEach((slide, slideIndex) => {
           const body = slide.querySelector(".slide-body");
           if (!body) return;
@@ -1097,23 +1122,59 @@
               const currentText = textSpan.textContent.trimStart();
               const label = roleEl.textContent.trim();
 
-              const newText = prompt(
-                `Edit the text for ${label}.\n(Use Enter for new lines):`,
-                currentText
-              );
-              if (newText === null) return;
+              const message =
+                `Edit the text for ${label}.\n` +
+                "- Type new text and press OK to save.\n" +
+                "- Leave the box EMPTY to reset to the default.\n" +
+                "- Press Cancel to keep current text.\n\n" +
+                "(Use Enter for new lines.)";
 
-              textSpan.textContent = " " + newText;
+              const input = prompt(message, currentText);
+              if (input === null) return; // user cancelled
 
-              if (hasStorage) {
-                try {
-                  const key = STORAGE_PREFIX + slideIndex + "_" + roleIndex;
-                  localStorage.setItem(key, newText);
-                } catch (err) {
-                  console.error("Failed to save role section", err);
-                  alert("Could not save this section to localStorage.");
+              let finalText = currentText;
+              const overrideKey = STORAGE_PREFIX + slideIndex + "_" + roleIndex;
+
+              if (input.trim() === "") {
+                // reset to default
+                let defaultText = null;
+
+                if (hasStorage) {
+                  const defKey = DEFAULT_PREFIX + slideIndex + "_" + roleIndex;
+                  defaultText = localStorage.getItem(defKey);
+                }
+
+                if (!defaultText && textSpan.dataset.defaultText) {
+                  defaultText = textSpan.dataset.defaultText;
+                }
+
+                if (!defaultText) {
+                  defaultText = currentText; // fallback
+                }
+
+                finalText = defaultText;
+
+                if (hasStorage) {
+                  try {
+                    localStorage.removeItem(overrideKey);
+                  } catch (err) {
+                    console.error("Failed to clear override", err);
+                  }
+                }
+              } else {
+                // save new override
+                finalText = input;
+                if (hasStorage) {
+                  try {
+                    localStorage.setItem(overrideKey, finalText);
+                  } catch (err) {
+                    console.error("Failed to save role section", err);
+                    alert("Could not save this section to localStorage.");
+                  }
                 }
               }
+
+              textSpan.textContent = " " + finalText;
             };
 
             roleEl.title = "Double-click or long-press to edit this speaker's lines";
@@ -1167,8 +1228,9 @@
         });
       }
 
-      // Prepare DOM: wrap, load, then attach editors
+      // Prepare DOM: wrap, capture defaults, load overrides, then attach editors
       wrapRoleSections();
+      captureDefaultRoleSections();
       loadSavedRoleSections();
       attachRoleEditors();
 
