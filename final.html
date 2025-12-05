@@ -212,7 +212,7 @@
     }
 
     .role-section-text {
-      /* just to help spacing; keep neutral styling */
+      /* neutral styling */
     }
 
     @media (max-width: 600px) {
@@ -1029,12 +1029,11 @@
       const total = slides.length;
       let rolesHidden = false;
 
-      // Turn each role-name + following content into: <span.role-name>...</span><span.role-section-text>...</span>
+      // Wrap role-name + following content into role-section-text spans
       function wrapRoleSections() {
         document.querySelectorAll(".slide-body").forEach((body) => {
           const roleNames = Array.from(body.querySelectorAll(".role-name"));
           roleNames.forEach((roleEl) => {
-            // If already wrapped (next sibling is role-section-text), skip
             if (
               roleEl.nextElementSibling &&
               roleEl.nextElementSibling.classList.contains("role-section-text")
@@ -1084,13 +1083,14 @@
 
       function attachRoleEditors() {
         const hasStorage = "localStorage" in window;
+
         slides.forEach((slide, slideIndex) => {
           const body = slide.querySelector(".slide-body");
           if (!body) return;
           const roleNames = Array.from(body.querySelectorAll(".role-name"));
+
           roleNames.forEach((roleEl, roleIndex) => {
-            roleEl.title = "Double-click to edit this speaker's lines";
-            roleEl.addEventListener("dblclick", () => {
+            const openEditor = () => {
               const textSpan = roleEl.nextElementSibling;
               if (!textSpan || !textSpan.classList.contains("role-section-text")) return;
 
@@ -1114,12 +1114,60 @@
                   alert("Could not save this section to localStorage.");
                 }
               }
+            };
+
+            roleEl.title = "Double-click or long-press to edit this speaker's lines";
+
+            // Desktop: double-click
+            roleEl.addEventListener("dblclick", (e) => {
+              e.preventDefault();
+              openEditor();
             });
+
+            // Mobile: long-press (touch and hold)
+            let pressTimer = null;
+            let startX = 0;
+            let startY = 0;
+            const LONG_PRESS_MS = 550;
+            const MOVE_TOL = 10;
+
+            roleEl.addEventListener("touchstart", (e) => {
+              if (e.touches.length !== 1) return;
+              const t = e.touches[0];
+              startX = t.clientX;
+              startY = t.clientY;
+
+              pressTimer = setTimeout(() => {
+                pressTimer = null;
+                openEditor();
+              }, LONG_PRESS_MS);
+            });
+
+            roleEl.addEventListener("touchmove", (e) => {
+              if (!pressTimer) return;
+              const t = e.touches[0];
+              const dx = t.clientX - startX;
+              const dy = t.clientY - startY;
+              if (Math.abs(dx) > MOVE_TOL || Math.abs(dy) > MOVE_TOL) {
+                clearTimeout(pressTimer);
+                pressTimer = null;
+              }
+            });
+
+            const cancelTouch = () => {
+              if (pressTimer) {
+                clearTimeout(pressTimer);
+                pressTimer = null;
+              }
+            };
+
+            roleEl.addEventListener("touchend", cancelTouch);
+            roleEl.addEventListener("touchcancel", cancelTouch);
           });
         });
       }
 
-      // Prepare DOM: wrap role sections, then load saved text, then attach editors
+      // Prepare DOM: wrap, load, then attach editors
       wrapRoleSections();
       loadSavedRoleSections();
       attachRoleEditors();
