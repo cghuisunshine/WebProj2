@@ -138,6 +138,8 @@
       transform: translateX(12%);
       pointer-events: none;
       transition: opacity var(--transition-fast), transform var(--transition-fast);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     @media (max-width: 600px) {
@@ -856,7 +858,7 @@
         </div>
       </section>
 
-      <!-- RIGHT: Outline panel for timing + live demo script -->
+      <!-- RIGHT: Outline panel -->
       <aside class="outline-panel">
         <div>
           <div class="outline-title">Slide Outline &amp; Timing</div>
@@ -1312,3 +1314,4 @@
   </script>
 </body>
 </html>
+
